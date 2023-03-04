@@ -1,3 +1,4 @@
+from pprint import pprint
 from stashapi.stashbox import StashBoxInterface
 from stashapi.stashapp import StashInterface
 from dotenv import load_dotenv
@@ -6,6 +7,7 @@ from urllib.parse import urlparse
 import os
 import time
 import json
+import markers
 
 
 def fetch_tags():
@@ -48,6 +50,7 @@ def fetch_tags():
 
     return all_tags
 
+
 # cache tags in a tags.json file so we don't need to repeat the requests every time
 def load_tags():
     all_tags = None
@@ -62,9 +65,9 @@ def load_tags():
     return all_tags
 
 
-def persist_tags(tags):
+def create_stash_api():
     stash_url = urlparse(os.environ["STASHAPP_URL"])
-    stash_api = StashInterface(
+    return StashInterface(
         {
             "scheme": stash_url.scheme,
             "domain": stash_url.hostname,
@@ -72,6 +75,9 @@ def persist_tags(tags):
             "ApiKey": os.environ["STASHAPP_API_KEY"],
         }
     )
+
+
+def persist_tags(stash_api, tags):
     for tag in tags:
         try:
             stash_api.create_tag(
@@ -87,9 +93,9 @@ def persist_tags(tags):
 
 def main():
     load_dotenv()
-    tags = load_tags()
-    print(f"fetched or loaded {len(tags)} tags")
-    persist_tags(tags)
+    stash = create_stash_api()
+    marker_list = markers.fetch_markers(stash)
+    markers.build_compilation(marker_list, 10)
 
 
 if __name__ == "__main__":
