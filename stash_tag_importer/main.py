@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from pprint import pprint
+from typing import List
 from stashapi.stashbox import StashBoxInterface
 from stashapi.stashapp import StashInterface
 from dotenv import load_dotenv
@@ -9,6 +10,7 @@ import os
 import time
 import json
 from markers import CompilationBuilder
+import questionary
 
 
 def fetch_tags():
@@ -99,9 +101,13 @@ class Tag:
     count: int
 
 
-def main():
-    load_dotenv()
-    stash = create_stash_api()
+@dataclass
+class Options:
+    selected_tag_ids: List[str]
+    shuffle_clips: bool
+
+
+def ask_for_options(stash: StashInterface):
     tags = stash.find_tags()
     tags = [
         Tag(t["id"], t["name"], t["scene_marker_count"])
@@ -109,9 +115,30 @@ def main():
         if t["scene_marker_count"] > 0
     ]
     tags.sort(key=lambda t: t.count, reverse=True)
+    tag_choices = [f"{t.name} ({t.count} occurrences)" for t in tags]
+    answers = questionary.form(
+        tags=questionary.checkbox("Select tags", choices=tag_choices),
+        shuffle=questionary.confirm("Should the clips be shuffled?"),
+    ).ask()
+    tag_answers = answers["tags"]
 
-    # builder = CompilationBuilder(stash)
-    # markers = builder.fetch_markers()
+    selected_ids = []
+    for answer in tag_answers:
+        open_paren = answer.index(" (")
+        tag_name = answer[0:open_paren]
+        tag_id = [t.id for t in tags if t.name == tag_name][0]
+        selected_ids.append(tag_id)
+
+    return Options(selected_ids, answers["shuffle"])
+
+
+def main():
+    load_dotenv()
+    stash = create_stash_api()
+    options = ask_for_options(stash)
+    builder = CompilationBuilder(stash)
+    markers = builder.fetch_markers(options.selected_tag_ids)
+    builder.build_compilation(markers, 15, False, options.shuffle_clips, "./videos")
 
 
 if __name__ == "__main__":

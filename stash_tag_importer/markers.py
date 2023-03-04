@@ -83,11 +83,12 @@ class CompilationBuilder:
         return markers
 
     def build_compilation(
+        self,
         markers: List[Marker],
         clip_duration: int,
-        force_new=False,
-        shuffle_clips=True,
-        clip_dir="./videos",
+        force_new: bool,
+        shuffle_clips: bool,
+        clip_dir: str,
     ):
         clips: List[Path] = []
         if shuffle_clips:
