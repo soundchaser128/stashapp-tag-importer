@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from pprint import pprint
 from stashapi.stashbox import StashBoxInterface
 from stashapi.stashapp import StashInterface
@@ -8,7 +7,7 @@ from urllib.parse import urlparse
 import os
 import time
 import json
-from markers import CompilationBuilder
+import markers
 
 
 def fetch_tags():
@@ -92,26 +91,11 @@ def persist_tags(stash_api, tags):
             print(f"failed to persist tag {tag}: {e}")
 
 
-@dataclass
-class Tag:
-    id: str
-    name: str
-    count: int
-
-
 def main():
     load_dotenv()
     stash = create_stash_api()
-    tags = stash.find_tags()
-    tags = [
-        Tag(t["id"], t["name"], t["scene_marker_count"])
-        for t in tags
-        if t["scene_marker_count"] > 0
-    ]
-    tags.sort(key=lambda t: t.count, reverse=True)
-
-    # builder = CompilationBuilder(stash)
-    # markers = builder.fetch_markers()
+    marker_list = markers.fetch_markers(stash)
+    markers.build_compilation(marker_list, 10)
 
 
 if __name__ == "__main__":
