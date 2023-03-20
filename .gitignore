@@ -1,7 +1,2 @@
 .env
 tags.json
-markers.json
-videos/*
-*.mp4
-__pycache__
-clips.txt
