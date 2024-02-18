@@ -1,5 +1,5 @@
 # stashapp-tag-importer
-Creates tags and aliases, resolves tag conflicts, and updates tag titles and descriptions from Stashbox (StashDB) to your local Stash instance. It can be run periodically to perform a one-sided "sync" from Stashbox (StashDB) to your Stash instance.
+Creates tags and aliases, resolves tag conflicts, and updates tag titles and descriptions from Stashbox (StashDB) to your local Stash instance. It can be run periodically to perform a one way sync to keep your Stash instance up to date with Stashbox (StashDB).
 
 ## Warning - Back Up Stash Instance Before Use
 * This script is **very** invasive and makes thousands of changes to your database.
@@ -7,7 +7,7 @@ Creates tags and aliases, resolves tag conflicts, and updates tag titles and des
   * Go to Settings > Tasks > Backup, then perform both Backup and Download Backup actions.
   * Make sure you are familiar with the [restore process](https://docs.stashapp.cc/beginner-guides/backup-and-restore-database/).
   * I would recommend testing out a restore before using this script.
-* This was developed and tested against Stash v0.20.2 and v0.21.0.
+* This was developed and tested against Stash v0.24.3.
   * If you are on something older, please update.
   * If you are on something newer, I cannot stress enough, **please perform a backup** before using this script.
 
