@@ -1,2 +1,4 @@
 .env
+poetry.lock
+stashdb_tag_importer.log
 tags.json
