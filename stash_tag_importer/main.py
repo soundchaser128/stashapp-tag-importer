@@ -193,8 +193,8 @@ def stash_api_call(api_call, payload, sorting=None):
                 return stash_api.find_galleries(payload, sorting)
             elif api_call == "find_performers":
                 return stash_api.find_performers(payload, sorting)
-            elif api_call == "find_scene_markers_filter":
-                return stash_api.find_scene_markers_filter(payload)
+            elif api_call == "find_scene_markers":
+                return stash_api.find_scene_markers(payload)
             elif api_call == "create_tag":
                 return stash_api.create_tag(payload)
             elif api_call == "update_tag":
@@ -370,7 +370,7 @@ def promote_alias(old_tag, new_tag, alias):
         logger.info(
             f"Migrating tag \"{new_tag['name']}\" to markers tagged with \"{old_tag['name']}\"."
         )
-        markers_to_migrate = stash_api_call("find_scene_markers_filter", search_filter)
+        markers_to_migrate = stash_api_call("find_scene_markers", search_filter)
         migrate_alias_update_stashdb("marker", markers_to_migrate, new_tag)
 
 
@@ -514,7 +514,7 @@ def migrate_alias(old_tag, new_tag, alias):
     logger.info(
         f"Migrating tag \"{new_tag['name']}\" to markers tagged with \"{old_tag['name']}\"."
     )
-    markers_to_migrate = stash_api_call("find_scene_markers_filter", search_filter)
+    markers_to_migrate = stash_api_call("find_scene_markers", search_filter)
     migrate_alias_update_stashdb("marker", markers_to_migrate, new_tag)
 
     # Remove alias from old tag.
