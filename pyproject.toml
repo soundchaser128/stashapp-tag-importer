@@ -6,7 +6,7 @@ authors = ["soundchaser128 <soundchaser128@gmail.com>", "unatco90 <99694038+unat
 
 [tool.poetry.dependencies]
 python = "^3.10"
-stashapp-tools = "^0.2.40"
+stashapp-tools = "^0.2.41"
 black = "^22.12.0"
 python-dotenv = "^0.21.0"
 
